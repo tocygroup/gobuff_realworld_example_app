@@ -3,6 +3,9 @@
 const faker = require("faker");
 const { clear } = require("../../server/db");
 const { seed } = require("../../server/db");
+const {
+  addMatchImageSnapshotPlugin,
+} = require('cypress-image-snapshot/plugin');
 
 module.exports = (on, config) => {
   on("task", {
@@ -33,4 +36,5 @@ module.exports = (on, config) => {
       return null;
     }
   });
+  addMatchImageSnapshotPlugin(on, config);
 };

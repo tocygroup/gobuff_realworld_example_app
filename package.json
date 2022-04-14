@@ -5,5 +5,8 @@
     "pg": "^8.7.3",
     "sequelize": "^6.18.0",
     "sequelize-cli": "^6.4.1"
+  },
+  "devDependencies": {
+    "cypress-image-snapshot": "^4.0.1"
   }
 }
