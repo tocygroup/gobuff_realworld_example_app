@@ -3,7 +3,7 @@
   <div class="banner">
     <div class="container">
       <h1 class="logo-font">conduit</h1>
-      <p>A place to share your knowledge.</p>
+      <p>A place to share your knowledge too.</p>
     </div>
   </div>
 
@@ -23,11 +23,11 @@
         </div>
 
         <%= partial("articles/list.html") %>
-        
+
         <nav>
           <ul class="pagination">
             <%= for (p) in until(paginator.TotalPages) { %>
-              <% let pageIndex = p+1 %> 
+              <% let pageIndex = p+1 %>
               <li data-test="page-link-<%= pageIndex %>" class="page-item <%= if (paginator.Page == pageIndex) { %>active<% } %>">
                 <a href="/?page=<%= pageIndex %>" class="page-link"><%= pageIndex %></a>
               </li>
