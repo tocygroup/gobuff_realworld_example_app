@@ -36,6 +36,7 @@ ingress:
   hostPath: "/"
   sslRedirect: false
   nginxController: false
+  certificateArn: eee
   certManager:
     enabled: false
     clusterIssuerName: letsecnrypt
