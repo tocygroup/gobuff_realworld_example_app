@@ -117,7 +117,7 @@ jobs:
         run: aws eks update-kubeconfig --name $DEV_CLUSTER_NAME
       - run: |
             helm plugin install https://github.com/databus23/helm-diff
-            helm diff upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/dev/values.yaml -n dev --set image.tag=$IMAGE_TAG --create-namespace
+            helm diff upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/dev/values.yaml -n dev --set image.tag=$IMAGE_TAG --allow-unreleased
             helm upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/dev/values.yaml -n dev --set image.tag=$IMAGE_TAG --create-namespace
         env:
           IMAGE_TAG: ${{ github.sha }}
@@ -140,7 +140,7 @@ jobs:
         run: aws eks update-kubeconfig --name $PROD_CLUSTER_NAME
       - run: |
             helm plugin install https://github.com/databus23/helm-diff
-            helm diff upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/prod/values.yaml -n prod --set image.tag=$IMAGE_TAG --create-namespace
+            helm diff upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/prod/values.yaml -n prod --set image.tag=$IMAGE_TAG --allow-unreleased
             helm upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/prod/values.yaml -n prod --set image.tag=$IMAGE_TAG --create-namespace
         env:
           IMAGE_TAG: ${{ github.sha }}
