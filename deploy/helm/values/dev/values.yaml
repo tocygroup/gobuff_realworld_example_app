@@ -34,7 +34,7 @@ ingress:
   enabled: true
   hostName: buffalo.dev.tocygroup.com
   hostPath: "/"
-  sslRedirect: true
+  sslRedirect: false
   annotations: {}
     # kubernetes.io/ingress.class: alb
     # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
