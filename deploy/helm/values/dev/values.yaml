@@ -5,7 +5,7 @@
 # application
 app:
   servicePort: 80
-  containerPort: 5000
+  containerPort: 3000
 
 # deployment
 deployment:
