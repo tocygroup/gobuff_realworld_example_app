@@ -1,0 +1,21 @@
+apiVersion: v1
+description: Helm chart for deployment kibl-api-transformer-db on Kubernetes
+maintainers:
+- name: Tochukwu Nwoko
+  email: nwokotochukwu@gmail.com
+name: kibl-api-transformer-db
+version: v0.1.6
+kubeVersion: ">= 1.18.0-0"
+keywords:
+  - toptal-realworld
+  - generic
+  - application
+annotations:
+  artifacthub.io/changes: |
+    - kind: fixed
+      description: deployment adjustments
+    - kind: added
+      description: Documentation detail
+    - kind: fixed
+      description: Variables in ingress file
+  artifacthub.io/containsSecurityUpdates: "true"

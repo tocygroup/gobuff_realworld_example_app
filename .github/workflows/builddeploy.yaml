@@ -1,0 +1,130 @@
+name: BuildDeploy
+
+on:
+  push:
+    branches:
+      - production
+      - develop
+env:
+  DEV_CLUSTER_NAME: dev-toptal-realworld
+  PROD_CLUSTER_NAME: prod-toptal-realworld
+  RELEASE_NAME: toptal-realworld
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.16.0'
+      - uses: actions/checkout@v3
+      - uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.36
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.16.0'
+      - run: go install -tags sqlite github.com/gobuffalo/cli/cmd/buffalo@v0.18.8
+      - run: buffalo test --force-migrations
+      - run: buffalo test models -m "ArticleFavorite" --force-migrations
+  buildpush_dev:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.DEV_AWS_ROLE }}
+          aws-region: eu-west-1
+      - name: Login to Amazon DEV ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: dev-${{ env.RELEASE_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/dev-$REPOSITORY:$IMAGE_TAG -t $REGISTRY/dev-$REPOSITORY:latest  .
+          docker push $REGISTRY/dev-$REPOSITORY:$IMAGE_TAG
+          docker push $REGISTRY/dev-$REPOSITORY:latest
+  buildpush_prod:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.PROD_AWS_ROLE }}
+          aws-region: eu-west-1
+      - name: Login to Amazon DEV ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ env.RELEASE_NAME }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/prod-$REPOSITORY:$IMAGE_TAG -t $REGISTRY/prod-$REPOSITORY:latest  .
+          docker push $REGISTRY/prod-$REPOSITORY:$IMAGE_TAG
+          docker push $REGISTRY/prod-$REPOSITORY:latest
+  deploy_dev:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    runs-on: ubuntu-latest
+    container: nixadmins/helm:v0.1.1
+    needs: buildpush_dev
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.DEV_AWS_ROLE }}
+          aws-region: eu-west-1
+      - name: update kubeconfig
+        run: aws eks update-kubeconfig --name $DEV_CLUSTER_NAME
+      - run: |
+            helm plugin install https://github.com/databus23/helm-diff
+            helm diff upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/dev/values.yaml -n dev --set image.tag=$IMAGE_TAG --create-namespace
+            helm upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/dev/values.yaml -n dev --set image.tag=$IMAGE_TAG --create-namespace
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+  deploy_prod:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    container: nixadmins/helm:v0.1.1
+    needs: buildpush_dev
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.PROD_AWS_ROLE }}
+          aws-region: eu-west-1
+      - name: update kubeconfig
+        run: aws eks update-kubeconfig --name $PROD_CLUSTER_NAME
+      - run: |
+            helm plugin install https://github.com/databus23/helm-diff
+            helm diff upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/prod/values.yaml -n prod --set image.tag=$IMAGE_TAG --create-namespace
+            helm upgrade --install $RELEASE_NAME ./deploy/helm/charts/$RELEASE_NAME --values ./deploy/helm/values/prod/values.yaml -n prod --set image.tag=$IMAGE_TAG --create-namespace
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+
