@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func (as *ActionSuite) readUser() *models.User {
+func (as *ActionSuite) Test_readUser() *models.User {
 	as.LoadFixture("basics")
 
 	u := &models.User{}
