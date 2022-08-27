@@ -46,7 +46,7 @@ func (a Articles) String() string {
 
 // ParseTags parses the string of tags
 func (a *Article) ParseTags() []string {
-	tagsString := strings.ToLower(strings.Replace(a.Tags, "#", "", 0))
+	tagsString := strings.ToLower(strings.Replace(a.Tags, "#", "", -1))
 
 	// Try with separator ','
 	tagsToNormalize := strings.Split(tagsString, ",")
