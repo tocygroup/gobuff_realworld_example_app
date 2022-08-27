@@ -36,7 +36,7 @@ ingress:
   hostPath: "/"
   sslRedirect: false
   nginxController: false
-  certificateArn: eee
+  annotations: {}
   certManager:
     enabled: false
     clusterIssuerName: letsecnrypt
@@ -48,8 +48,8 @@ variables:
     clusterSecretStoreName: hhhh
     secretKeyRef: ggggg
     secretPropertyKeys:
-    - name: DATABASE_URL
-      propertyKeyRef: DATABASE_URL
+    - name: aaaa
+      propertyKeyRef: aaaa
   nonSecret: {}
 
 # horizontal autoscaler

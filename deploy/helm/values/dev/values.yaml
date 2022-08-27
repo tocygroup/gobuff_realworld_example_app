@@ -34,9 +34,12 @@ ingress:
   enabled: true
   hostName: buffalo.dev.tocygroup.com
   hostPath: "/"
-  certificateArn: arn:aws:acm:eu-west-1:600347278704:certificate/63632d08-87fe-4649-8583-fdbcbb3a0d9a
   sslRedirect: false
-  nginxController: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+  nginxController: false
   certManager:
     enabled: false
     clusterIssuerName: letsecnrypt
