@@ -35,7 +35,8 @@ ingress:
   hostName: buffalo.dev.tocygroup.com
   hostPath: "/"
   sslRedirect: false
-  annotations: {}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
     # kubernetes.io/ingress.class: alb
     # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     # alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
