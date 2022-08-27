@@ -73,7 +73,7 @@ startupProbe:
 
 # readinessProbe
 readinessProbe:
-  enabled: true
+  enabled: false
   httpGet:
     path: "/"
   initialDelaySeconds: 20
