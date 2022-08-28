@@ -35,7 +35,8 @@ ingress:
   hostName: buffalo.dev.tocygroup.com
   hostPath: "/"
   sslRedirect: false
-  # annotations:
+  annotations:
+    external-dns.alpha.kubernetes.io/exclude: 'true'
   #     nginx.ingress.kubernetes.io/server-snippet: |
   #       if ($scheme = "http") {
   #         return 308 https://$host$request_uri;
