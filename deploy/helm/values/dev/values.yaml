@@ -34,7 +34,7 @@ ingress:
   enabled: true
   hostName: buffalo.dev.tocygroup.com
   hostPath: "/"
-  sslRedirect: yes
+  sslRedirect: false
   # annotations:
   #     nginx.ingress.kubernetes.io/server-snippet: |
   #       if ($scheme = "http") {
