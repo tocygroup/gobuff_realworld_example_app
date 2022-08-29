@@ -1,0 +1,87 @@
+# Default values for example.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# application
+app:
+  servicePort: 80
+  containerPort: 3000
+
+# deployment
+deployment:
+  memoryRequest: "1024Mi"
+  cpuRequest: "250m"
+  memoryLimit: "2048Mi"
+  cpuLimit: "500m"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+
+# container
+image:
+  repository:
+    name: 600347278704.dkr.ecr.eu-west-1.amazonaws.com
+    isPrivate: false
+    secretName: null
+  name: dev-toptal-realworld
+  tag: latest
+  pullPolicy: Always
+
+# ingress
+ingress:
+  enabled: true
+  hostName: buffalo.tocygroup.com
+  hostPath: "/"
+  sslRedirect: false
+  annotations:
+    external-dns.alpha.kubernetes.io/exclude: 'true'
+  nginxController: true
+  certManager:
+    enabled: false
+    clusterIssuerName: letsecnrypt
+
+variables:
+  externalsecret:
+    enabled: true
+    clusterSecretStoreName: cluster-secretstore-sm
+    secretKeyRef: prod/toptal/postgres/url
+    secretPropertyKeys:
+    - name: DATABASE_URL
+      propertyKeyRef: DATABASE_URL
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  avgCpuUtilization: 50
+
+# startupProbe
+startupProbe:
+  enabled: false
+  httpGet:
+    path: "/"
+  periodSeconds: 10
+  failureThreshold: 20
+  timeoutSeconds: 1
+
+# readinessProbe
+readinessProbe:
+  enabled: false
+  httpGet:
+    path: "/"
+  initialDelaySeconds: 20
+  periodSeconds: 30
+  failureThreshold: 2
+  timeoutSeconds: 3
+
+# livenessProbe
+livenessProbe:
+  enabled: false
+  httpGet:
+    path: "/"
+  initialDelaySeconds: 20
+  periodSeconds: 60
+  failureThreshold: 1
+  timeoutSeconds: 3
+
