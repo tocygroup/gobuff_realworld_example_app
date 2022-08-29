@@ -3,7 +3,7 @@ name: BuildDeploy
 on:
   push:
     branches:
-      - production
+      - master
       - develop
 env:
   DEV_CLUSTER_NAME: dev-toptal-realworld
