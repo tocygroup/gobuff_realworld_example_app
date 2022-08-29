@@ -7,7 +7,7 @@ require (
 	github.com/felixge/httpsnoop v1.0.2 // indirect
 	github.com/gobuffalo/buffalo v0.18.9
 	github.com/gobuffalo/buffalo-pop/v2 v2.3.0
-	github.com/gobuffalo/buffalo-pop/v3 v3.0.6 // indirect
+	github.com/gobuffalo/buffalo-pop/v3 v3.0.6
 	//github.com/gobuffalo/buffalo-pop/v3 v3.0.6
 	//github.com/gobuffalo/buffalo-pop/v3 v3.0.2
 	github.com/gobuffalo/envy v1.10.1

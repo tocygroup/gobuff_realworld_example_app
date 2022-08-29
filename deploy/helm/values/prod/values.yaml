@@ -46,7 +46,7 @@ variables:
   externalsecret:
     enabled: true
     clusterSecretStoreName: cluster-secretstore-sm
-    secretKeyRef: prod/toptal/postgres/url
+    secretKeyRef: production/toptal/postgres/url
     secretPropertyKeys:
     - name: DATABASE_URL
       propertyKeyRef: DATABASE_URL
