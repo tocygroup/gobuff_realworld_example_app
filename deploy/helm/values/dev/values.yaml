@@ -37,31 +37,16 @@ ingress:
   sslRedirect: false
   annotations:
     external-dns.alpha.kubernetes.io/exclude: 'true'
-  #     nginx.ingress.kubernetes.io/server-snippet: |
-  #       if ($scheme = "http") {
-  #         return 308 https://$host$request_uri;
-  #       }
-    # kubernetes.io/ingress.class: alb
-    # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
-    # alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
   nginxController: true
   certManager:
     enabled: false
     clusterIssuerName: letsecnrypt
 
-# env variables
-# variables:
-#   nonSecret: {}
-#   externalsecret:
-#     enabled: true
-#     clusterSecretStoreName: cluster-secretstore-sm
-#     #secrets:
-#     secretArn: arn:aws:secretsmanager:eu-west-1:600347278704:secret:toptal/postgres-jglnk0
 variables:
   externalsecret:
     enabled: true
     clusterSecretStoreName: cluster-secretstore-sm
-    secretKeyRef: prod/toptal/postgres/url
+    secretKeyRef: dev/toptal/postgres/url
     secretPropertyKeys:
     - name: DATABASE_URL
       propertyKeyRef: DATABASE_URL
@@ -99,4 +84,3 @@ livenessProbe:
   periodSeconds: 60
   failureThreshold: 1
   timeoutSeconds: 3
-
