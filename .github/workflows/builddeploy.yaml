@@ -126,7 +126,7 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
   deploy_prod:
-    if: ${{ github.ref == 'refs/heads/master' && github.event.action == 'closed' && github.event.pull_request.merged = true}}
+    if: ${{ github.ref == 'refs/heads/master' && github.event.action == 'closed' && github.event.pull_request.merged == true}}
     runs-on: ubuntu-latest
     container: nixadmins/helm:v0.1.1
     needs: buildpush_prod
