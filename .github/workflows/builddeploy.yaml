@@ -47,7 +47,7 @@ jobs:
       - run: buffalo test --force-migrations
       - run: buffalo test models -m "ArticleFavorite" --force-migrations
   buildpush_dev:
-    if: ${{ github.ref == 'refs/heads/develop' }}
+    if: ${{ github.ref == 'refs/heads/develop' && github.event.pull_request.merged != true}}
     runs-on: ubuntu-latest
     needs:
     # - lint
@@ -103,7 +103,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           docker push $REGISTRY/$REPOSITORY:latest
   deploy_dev:
-    if: ${{ github.ref == 'refs/heads/develop' }}
+    if: ${{ github.ref == 'refs/heads/develop' && github.event.pull_request.merged != true}}
     runs-on: ubuntu-latest
     container: nixadmins/helm:v0.1.1
     needs: buildpush_dev
