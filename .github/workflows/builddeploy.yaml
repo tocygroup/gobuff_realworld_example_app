@@ -27,7 +27,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
+    if: ${{ github.event.pull_request.merged != true}}
     services:
       postgres:
         image: postgres
